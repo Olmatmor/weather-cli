@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-import { getArgs } from "./helpers/args.js";
+import { Command } from 'commander';
 import { printHelp, printSuccess, printError, printWeather } from './services/log.service.js';
 import { saveKeyValue, TOKEN_DICTIONARY } from './services/storage.service.js';
+import { getWeather } from './services/api.service.js';
 
 const saveToken = async (token) => {
 	if (!token.length) {
@@ -31,8 +32,8 @@ const saveCity = async (city) => {
 
 const getForcast = async () => {
 	try {
-		const weather = await getWeather('moscow');
-		printWeather(weather, '');
+		const weather = await getWeather();
+		printWeather(weather);
 	}
 	catch (e) {
 		if (e?.response?.status == 404) {
@@ -45,21 +46,28 @@ const getForcast = async () => {
 	}
 };
 
-const initCLI = () => {
-	const args = getArgs(process.argv)
-	if (args.h) {
+const initCLI = async () => {
+	const program = new Command();
+
+	program
+		.option('-c, --city <CITY_NAME>', 'Введите город')
+		.option('-h, --help', 'Вывод справки по CLI')
+		.option('-t, --token <API_KEY>', 'Ввод токена');
+	program.parse(process.argv);
+
+	const options = program.opts();
+	if (options.help) {
 		//Вывод help
 		printHelp();
-	}
-	if (args.s) {
+	} else if (options.city) {
 		//Сохранить город
-		saveCity(args.s);
-	}
-	if (args.t) {
+		saveCity(options.city);
+	} else if (options.token) {
 		//Сохранить токен
-		return saveToken(args.t);
+		return saveToken(options.token);
+	} else {	//Вывести погоду
+		getForcast();
 	}
-	//Вывести погоду
 };
 
 initCLI();

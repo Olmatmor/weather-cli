@@ -20,6 +20,7 @@
 	"dependencies": {
 		"axios": "^0.27.2",
 		"chalk": "^5.0.1",
+		"commander": "^9.3.0",
 		"dedent-js": "^1.0.1"
 	}
 }
