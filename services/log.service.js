@@ -13,9 +13,9 @@ const printHelp = () => {
 	console.log(
 		dedent`${chalk.bgCyan('Help')}
 		Без параметров - вывод погоды
-		-s [CITY] для установки города
-		-h для вывода помощи
-		-t [API_KEY] для сохранения токена
+		-с, --city <CITY_NAME> для установки города
+		-h, --help для вывода помощи
+		-t, --token <API_KEY> для сохранения токена
 		`
 	);
 };
